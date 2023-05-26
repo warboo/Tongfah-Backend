@@ -1,33 +1,34 @@
 const express = require("express");
+const multer = require("multer");
 const Post = require("../models/postSchema");
 
 const router = express.Router();
 
-router.post("/post", async (req, res) => {
-    const data = new Post({
-        ...req.body
-        // owner: req.body.owner,
-        // location: req.body.location,
-        // condition: req.body.condition,
-        // temp: req.body.temp,
-        // wind: req.body.wind,
-        // precip: req.body.precip,
-        // visibility: req.body.visibility,
-        // uv: req.body.uv,
-        // pm25: req.body.pm25,
-        // pm25_index: req.body.pm25_index,
-        // image: {
-        //     data: Buffer,
-        //     contentType: String
-        // }
-    });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-    try {
-        const dataToSave = await data.save();
-        res.status(200).json(dataToSave);
+router.post("/post", upload.single("image"), async (req, res) => {
+    if (!req.file) {
+        res.json({
+            message: "Cannot find the file."
+        });
     }
-    catch (err) {
-        res.json({message: err.message});
+    else {
+        const data = new Post({
+            ...req.body,
+            image: {
+                data: req.file.buffer,
+                contentType: req.file.mimetype
+            }
+        });
+    
+        try {
+            const dataToSave = await data.save();
+            res.status(200).json(dataToSave);
+        }
+        catch (err) {
+            res.json({message: err.message});
+        }
     }
 });
 

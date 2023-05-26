@@ -13,10 +13,10 @@ const postSchema = new Schema({
     uv: Number,
     pm25: Number,
     pm25_index: Number,
-    // image: {
-    //     data: Buffer,
-    //     contentType: String
-    // }
+    image: {
+        data: Buffer,
+        contentType: String
+    }
 });
 
 module.exports = mongoose.model("Post", postSchema);
