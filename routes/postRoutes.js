@@ -70,7 +70,7 @@ router.get("/", async (req, res) => {
         res.json(data);
     }
     catch(err) {
-        res.status(500).json({message: error.message});
+        res.status(500).json({message: err.message});
     }
 });
 
