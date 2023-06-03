@@ -26,9 +26,7 @@ async function getWeather(latitude, longitude) {
 
 router.post("/post", upload.single("image"), async (req, res) => {
     // const weatherData = await getWeather("16.425640290331955", "102.83526550930343");
-    console.log(req.body);
     const weatherData = await getWeather(req.body.latitude, req.body.longitude);
-    console.log(weatherData);
 
     if (!req.file) {
         res.json({
@@ -59,7 +57,7 @@ router.post("/post", upload.single("image"), async (req, res) => {
             res.status(200).json(dataToSave);
         }
         catch (err) {
-            res.json({message: err.message});
+            res.status(400).json({message: err.message});
         }
     }
 });
@@ -67,10 +65,22 @@ router.post("/post", upload.single("image"), async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const data = await Post.find();
+
+        data.sort((a,b) => b.date - a.date);
         res.json(data);
     }
     catch(err) {
         res.status(500).json({message: err.message});
+    }
+});
+
+router.delete("/delete/:id", async(req, res) => {
+    try {
+        const dataToDelete = await Post.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: "Post deleted" });
+    }
+    catch(err) {
+        res.status(400).json({ message: err.message });
     }
 });
 
