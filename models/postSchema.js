@@ -5,6 +5,7 @@ const postSchema = new Schema({
     owner: String,
     date: { type: Date, default: Date.now },
     location: String,
+    location_url: String,
     condition: String,
     temp: Number,
     wind: Number,

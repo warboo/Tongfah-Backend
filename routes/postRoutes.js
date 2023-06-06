@@ -38,6 +38,7 @@ router.post("/post", upload.single("image"), async (req, res) => {
             // ...req.body,
             owner: req.body.owner,
             location: weatherData.location.name + ", " + weatherData.location.country,
+            location_url: "https://www.google.com/maps/search/?api=1&query=" + req.body.latitude + " " + req.body.longitude,
             condition: weatherData.current.condition.text,
             temp: weatherData.current.temp_c,
             wind: weatherData.current.wind_kph,
